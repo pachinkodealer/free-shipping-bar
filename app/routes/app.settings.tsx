@@ -224,34 +224,22 @@ export default function SettingsPage() {
               </Card>
             </Layout.Section>
 
-            {/* Position — Pro */}
+            {/* Position — Free */}
             <Layout.Section>
               <Card>
                 <BlockStack gap="400">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <Text as="h2" variant="headingMd">Position</Text>
-                    {!settings.isPro && <Badge tone="info">Pro</Badge>}
-                  </InlineStack>
+                  <Text as="h2" variant="headingMd">Position</Text>
                   <Divider />
-                  {settings.isPro ? (
-                    <Select
-                      label="Bar position"
-                      name="position"
-                      options={[
-                        { label: "Top of page (fixed)", value: "top" },
-                        { label: "Bottom of page (fixed)", value: "bottom" },
-                      ]}
-                      value={position}
-                      onChange={setPosition}
-                    />
-                  ) : (
-                    <BlockStack gap="200">
-                      <Text as="p" variant="bodyMd" tone="subdued">
-                        Fixed at the top on the Free plan. Upgrade to choose position.
-                      </Text>
-                      <input type="hidden" name="position" value="top" />
-                    </BlockStack>
-                  )}
+                  <Select
+                    label="Bar position"
+                    name="position"
+                    options={[
+                      { label: "Bottom of page (sticky)", value: "bottom" },
+                      { label: "Top of page (sticky)", value: "top" },
+                    ]}
+                    value={position}
+                    onChange={setPosition}
+                  />
                 </BlockStack>
               </Card>
             </Layout.Section>

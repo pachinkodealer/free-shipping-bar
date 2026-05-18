@@ -1,8 +1,173 @@
 {% comment %}
   Delivery Bar — App Embed Block
-  Renders a delivery truck that drives toward a house as the cart fills.
-  Hidden by default; JS reveals after first cart fetch to prevent flash.
+  Styles are inlined here (not a separate asset) so changes take effect instantly.
 {% endcomment %}
+
+<style>
+#fsb-root {
+  width: 100%;
+  background: var(--fsb-bg, #ffffff);
+  color: var(--fsb-txt, #1e293b);
+  padding: 10px 20px 8px;
+  box-sizing: border-box;
+  font-family: inherit;
+  z-index: 9999;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
+}
+#fsb-root[data-position="top"] {
+  position: fixed; top: 0; left: 0; right: 0;
+  border-top: none;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+#fsb-root[data-position="bottom"] {
+  position: fixed; bottom: 0; left: 0; right: 0;
+}
+body:has(#fsb-root[data-position="top"])    { padding-top: 72px; }
+body:has(#fsb-root[data-position="bottom"]) { padding-bottom: 72px; }
+
+.fsb-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+.fsb-msg {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ── Road ─────────────────────────────── */
+.fsb-road {
+  position: relative;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* Asphalt surface — centered vertically in the road track */
+.fsb-road-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 12px;
+  background: #374151;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* White dashed center line */
+.fsb-road-line::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 6px; right: 6px;
+  transform: translateY(-50%);
+  border-top: 2px dashed rgba(255,255,255,0.28);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Green progress fill */
+.fsb-road-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: var(--fsb-pct, 0%);
+  background: var(--fsb-bar, #22c55e);
+  border-radius: 6px;
+  opacity: 0.85;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  z-index: 0;
+}
+
+/* ── Truck ────────────────────────────── */
+.fsb-truck {
+  position: absolute;
+  left: 0%;
+  bottom: 50%;
+  margin-bottom: 4px;
+  transform: translateX(-50%);
+  width: 40px; height: 25px;
+  color: var(--fsb-bar, #22c55e);
+  transition: left 0.6s cubic-bezier(0.4,0,0.2,1);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  z-index: 3;
+}
+.fsb-truck svg { width: 100%; height: 100%; }
+
+/* ── House + Tree ─────────────────────── */
+.fsb-house-group {
+  position: absolute;
+  right: 0;
+  bottom: 50%;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  z-index: 3;
+}
+.fsb-house {
+  width: 28px; height: 28px;
+  color: var(--fsb-txt, #1e293b);
+  opacity: 0.45;
+  transition: opacity 0.4s ease, color 0.4s ease;
+  flex-shrink: 0;
+}
+.fsb-house svg { width: 100%; height: 100%; }
+
+.fsb-tree {
+  width: 20px; height: 28px;
+  color: #16a34a;
+  flex-shrink: 0;
+  transform: scale(0) translateY(4px);
+  transform-origin: bottom center;
+  opacity: 0;
+}
+.fsb-tree svg { width: 100%; height: 100%; }
+
+/* ── Unlocked state ───────────────────── */
+#fsb-root.fsb--done .fsb-house {
+  color: var(--fsb-bar, #22c55e);
+  opacity: 1;
+}
+#fsb-root.fsb--done .fsb-tree {
+  animation: fsb-tree-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.15s forwards;
+}
+#fsb-root.fsb--done .fsb-truck {
+  animation: fsb-bounce 0.4s ease;
+}
+
+@keyframes fsb-tree-pop {
+  0%   { transform: scale(0) translateY(4px); opacity: 0; }
+  60%  { transform: scale(1.15) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes fsb-bounce {
+  0%   { transform: translateX(-50%) translateY(0); }
+  40%  { transform: translateX(-50%) translateY(-5px); }
+  70%  { transform: translateX(-50%) translateY(2px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Branding ─────────────────────────── */
+.fsb-brand {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  margin-top: 3px;
+  color: inherit;
+  text-decoration: none;
+}
+.fsb-brand:hover { opacity: 0.55; text-decoration: underline; }
+</style>
 
 <div
   id="fsb-root"
@@ -37,11 +202,18 @@
         </svg>
       </div>
 
-      <div class="fsb-house" id="fsb-house" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="currentColor">
-          <polygon points="20,4 38,20 34,20 34,38 22,38 22,28 18,28 18,38 6,38 6,20 2,20"/>
-          <rect x="15" y="10" width="10" height="10" rx="1" fill="white" opacity="0.6"/>
-        </svg>
+      <div class="fsb-house-group">
+        <div class="fsb-tree" id="fsb-tree" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40" fill="currentColor">
+            <polygon points="12,2 22,16 17,16 21,26 14,26 14,38 10,38 10,26 3,26 7,16 2,16"/>
+          </svg>
+        </div>
+        <div class="fsb-house" id="fsb-house" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="currentColor">
+            <polygon points="20,4 38,20 34,20 34,38 22,38 22,28 18,28 18,38 6,38 6,20 2,20"/>
+            <rect x="15" y="10" width="10" height="10" rx="1" fill="white" opacity="0.6"/>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -58,15 +230,11 @@
   "name": "Delivery Bar",
   "target": "body",
   "javascript": "delivery-bar.js",
-  "stylesheet": "delivery-bar.css",
   "settings": [
     {
-      "type": "range",
+      "type": "number",
       "id": "threshold",
       "label": "Free shipping threshold ($)",
-      "min": 1,
-      "max": 500,
-      "step": 1,
       "default": 50
     },
     {
@@ -91,7 +259,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background color",
-      "default": "#f1f5f9"
+      "default": "#ffffff"
     },
     {
       "type": "color",
@@ -104,10 +272,10 @@
       "id": "position",
       "label": "Bar position",
       "options": [
-        { "value": "top", "label": "Top of page" },
-        { "value": "bottom", "label": "Bottom of page" }
+        { "value": "bottom", "label": "Bottom of page (sticky)" },
+        { "value": "top", "label": "Top of page (sticky)" }
       ],
-      "default": "top"
+      "default": "bottom"
     },
     {
       "type": "checkbox",

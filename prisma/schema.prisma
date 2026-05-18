@@ -9,8 +9,8 @@ generator client {
 // enough when changing adapters.
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
-  provider = "sqlite"
-  url      = "file:dev.sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model ShippingBarSettings {
@@ -24,7 +24,7 @@ model ShippingBarSettings {
   barColor       String   @default("#22c55e")
   bgColor        String   @default("#f1f5f9")
   textColor      String   @default("#1e293b")
-  position       String   @default("top")
+  position       String   @default("bottom")
   showBranding   Boolean  @default(true)
   subscriptionId String?
   createdAt      DateTime @default(now())

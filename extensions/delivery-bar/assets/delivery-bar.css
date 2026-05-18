@@ -2,12 +2,14 @@
 
 #fsb-root {
   width: 100%;
-  background: var(--fsb-bg, #f1f5f9);
+  background: var(--fsb-bg, #ffffff);
   color: var(--fsb-txt, #1e293b);
-  padding: 10px 16px 6px;
+  padding: 10px 20px 8px;
   box-sizing: border-box;
   font-family: inherit;
   z-index: 9999;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
 }
 
 #fsb-root[data-position="top"] {
@@ -15,6 +17,9 @@
   top: 0;
   left: 0;
   right: 0;
+  border-top: none;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
 }
 
 #fsb-root[data-position="bottom"] {
@@ -26,67 +31,87 @@
 
 /* Offset body so fixed bar doesn't cover content */
 body:has(#fsb-root[data-position="top"]) {
-  padding-top: 68px;
+  padding-top: 72px;
 }
 
 body:has(#fsb-root[data-position="bottom"]) {
-  padding-bottom: 68px;
+  padding-bottom: 72px;
 }
 
 .fsb-inner {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
   text-align: center;
 }
 
 .fsb-msg {
   margin: 0 0 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   line-height: 1.4;
+  opacity: 0.85;
 }
 
 /* Road track */
 .fsb-road {
   position: relative;
-  height: 40px;
+  height: 44px;
   display: flex;
   align-items: center;
 }
 
+/* Asphalt road surface */
 .fsb-road-line {
   position: absolute;
   left: 0;
   right: 0;
-  height: 6px;
-  background: rgba(0,0,0,0.10);
-  border-radius: 3px;
-  overflow: hidden;
+  height: 12px;
+  background: #374151;
+  border-radius: 6px;
+  overflow: visible;
 }
 
-/* Animated fill on the road */
+/* White dashed center line — road markings */
+.fsb-road-line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  transform: translateY(-50%);
+  border-top: 2px dashed rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Green progress fill — covers the asphalt as truck moves */
 .fsb-road-line::after {
   content: '';
-  display: block;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   width: var(--fsb-pct, 0%);
   background: var(--fsb-bar, #22c55e);
-  border-radius: 3px;
-  transition: width 0.5s ease;
+  border-radius: 6px;
+  opacity: 0.82;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
 }
 
-/* Truck icon */
+/* Truck icon — sits just above the road */
 .fsb-truck {
   position: absolute;
   left: 0%;
+  bottom: 50%;
+  margin-bottom: 4px;
   transform: translateX(-50%);
-  width: 44px;
-  height: 28px;
+  width: 40px;
+  height: 25px;
   color: var(--fsb-bar, #22c55e);
-  transition: left 0.5s ease;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.18));
-  z-index: 2;
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  z-index: 3;
 }
 
 .fsb-truck svg {
@@ -94,17 +119,26 @@ body:has(#fsb-root[data-position="bottom"]) {
   height: 100%;
 }
 
-/* House icon */
-.fsb-house {
+/* House + tree wrapper — anchored to the right end of the road */
+.fsb-house-group {
   position: absolute;
   right: 0;
-  transform: translateX(0);
+  bottom: 50%;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  z-index: 3;
+}
+
+/* House icon */
+.fsb-house {
   width: 28px;
   height: 28px;
   color: var(--fsb-txt, #1e293b);
   opacity: 0.5;
   transition: opacity 0.4s ease, color 0.4s ease;
-  z-index: 2;
+  flex-shrink: 0;
 }
 
 .fsb-house svg {
@@ -112,14 +146,41 @@ body:has(#fsb-root[data-position="bottom"]) {
   height: 100%;
 }
 
-/* When threshold is reached — house lights up */
+/* Tree — hidden until threshold reached */
+.fsb-tree {
+  width: 20px;
+  height: 28px;
+  color: #16a34a;
+  flex-shrink: 0;
+  transform: scale(0) translateY(4px);
+  transform-origin: bottom center;
+  opacity: 0;
+  transition: none;
+}
+
+.fsb-tree svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* When threshold is reached — house lights up, tree pops in */
 #fsb-root.fsb--done .fsb-house {
   color: var(--fsb-bar, #22c55e);
   opacity: 1;
 }
 
+#fsb-root.fsb--done .fsb-tree {
+  animation: fsb-tree-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+}
+
 #fsb-root.fsb--done .fsb-truck {
   animation: fsb-bounce 0.4s ease;
+}
+
+@keyframes fsb-tree-pop {
+  0%   { transform: scale(0) translateY(4px); opacity: 0; }
+  60%  { transform: scale(1.15) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 @keyframes fsb-bounce {
@@ -132,13 +193,16 @@ body:has(#fsb-root[data-position="bottom"]) {
 /* Branding */
 .fsb-brand {
   display: block;
-  font-size: 10px;
-  opacity: 0.4;
-  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  margin-top: 3px;
   color: inherit;
   text-decoration: none;
 }
 
 .fsb-brand:hover {
-  opacity: 0.7;
+  opacity: 0.55;
+  text-decoration: underline;
 }
