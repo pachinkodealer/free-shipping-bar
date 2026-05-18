@@ -105,6 +105,13 @@ export default function SettingsPage() {
           <Banner tone="critical" title={actionData.error as string} onDismiss={() => {}} />
         )}
 
+        <Banner tone="info" title="Make sure free shipping is set up in Shopify">
+          DeliveryBar shows customers their progress — but the actual free shipping at checkout is controlled by your Shopify shipping rules.{" "}
+          <a href="https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/free-shipping" target="_blank" rel="noopener noreferrer">
+            Set up a free shipping rate →
+          </a>
+        </Banner>
+
         <Form method="post">
           <Layout>
             {/* Threshold */}
