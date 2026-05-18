@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "1b5039a7cc63607a4d873092237be4c8"
-application_url = "https://example.com"
+application_url = "https://free-shipping-bar-production-89c5.up.railway.app"
 embedded = true
 name = "free-shipping-bar"
 
@@ -24,7 +24,7 @@ api_version = "2026-07"
   # Route handlers live at app/routes/webhooks.customers.*.tsx and webhooks.shop.redact.tsx
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://free-shipping-bar-production-89c5.up.railway.app/auth/callback" ]
 
 [build]
 automatically_update_urls_on_dev = true
