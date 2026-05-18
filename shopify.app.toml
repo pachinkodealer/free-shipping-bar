@@ -22,10 +22,5 @@ api_version = "2026-07"
 [auth]
 redirect_urls = [ "https://free-shipping-bar-production-89c5.up.railway.app/auth/callback" ]
 
-[privacy_compliance]
-customer_data_request_url = "https://free-shipping-bar-production-89c5.up.railway.app/webhooks/customers/data_request"
-customer_deletion_url = "https://free-shipping-bar-production-89c5.up.railway.app/webhooks/customers/redact"
-shop_deletion_url = "https://free-shipping-bar-production-89c5.up.railway.app/webhooks/shop/redact"
-
 [build]
 automatically_update_urls_on_dev = true
