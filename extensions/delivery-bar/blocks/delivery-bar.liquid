@@ -1,0 +1,120 @@
+{% comment %}
+  Delivery Bar — App Embed Block
+  Renders a delivery truck that drives toward a house as the cart fills.
+  Hidden by default; JS reveals after first cart fetch to prevent flash.
+{% endcomment %}
+
+<div
+  id="fsb-root"
+  data-threshold="{{ block.settings.threshold | times: 100 }}"
+  data-msg-below="{{ block.settings.message_below | escape }}"
+  data-msg-above="{{ block.settings.message_above | escape }}"
+  data-position="{{ block.settings.position }}"
+  style="
+    --fsb-bar: {{ block.settings.bar_color }};
+    --fsb-bg:  {{ block.settings.bg_color }};
+    --fsb-txt: {{ block.settings.text_color }};
+    display: none;
+  "
+  aria-live="polite"
+  aria-label="Free delivery progress"
+>
+  <div class="fsb-inner">
+    <p class="fsb-msg" id="fsb-msg"></p>
+
+    <div class="fsb-road" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="fsb-road">
+      <div class="fsb-road-line"></div>
+
+      <div class="fsb-truck" id="fsb-truck" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 40" fill="currentColor">
+          <rect x="2" y="12" width="36" height="22" rx="3"/>
+          <path d="M38 18h10l8 10v6H38V18z"/>
+          <circle cx="14" cy="36" r="5"/>
+          <circle cx="14" cy="36" r="2" fill="white"/>
+          <circle cx="50" cy="36" r="5"/>
+          <circle cx="50" cy="36" r="2" fill="white"/>
+          <rect x="40" y="19" width="13" height="10" rx="1" fill="#bfdbfe"/>
+        </svg>
+      </div>
+
+      <div class="fsb-house" id="fsb-house" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="currentColor">
+          <polygon points="20,4 38,20 34,20 34,38 22,38 22,28 18,28 18,38 6,38 6,20 2,20"/>
+          <rect x="15" y="10" width="10" height="10" rx="1" fill="white" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
+
+    {% if block.settings.show_branding %}
+      <a class="fsb-brand" href="https://apps.shopify.com" target="_blank" rel="noopener">
+        Powered by DeliveryBar
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Delivery Bar",
+  "target": "body",
+  "javascript": "delivery-bar.js",
+  "stylesheet": "delivery-bar.css",
+  "settings": [
+    {
+      "type": "range",
+      "id": "threshold",
+      "label": "Free shipping threshold ($)",
+      "min": 1,
+      "max": 500,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "type": "text",
+      "id": "message_below",
+      "label": "Message (below threshold)",
+      "default": "Add {amount} more for free delivery!"
+    },
+    {
+      "type": "text",
+      "id": "message_above",
+      "label": "Message (threshold reached)",
+      "default": "Your order qualifies for free delivery!"
+    },
+    {
+      "type": "color",
+      "id": "bar_color",
+      "label": "Truck & bar color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#f1f5f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Bar position",
+      "options": [
+        { "value": "top", "label": "Top of page" },
+        { "value": "bottom", "label": "Bottom of page" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_branding",
+      "label": "Show 'Powered by DeliveryBar'",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

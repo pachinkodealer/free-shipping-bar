@@ -1,0 +1,17 @@
+{
+  "blocks": {
+    "delivery_bar": {
+      "name": "Delivery Bar"
+    }
+  },
+  "settings": {
+    "threshold":     { "label": "Free shipping threshold ($)" },
+    "message_below": { "label": "Message — below threshold" },
+    "message_above": { "label": "Message — threshold reached" },
+    "bar_color":     { "label": "Truck & bar color" },
+    "bg_color":      { "label": "Background color" },
+    "text_color":    { "label": "Text color" },
+    "position":      { "label": "Bar position" },
+    "show_branding": { "label": "Show 'Powered by DeliveryBar'" }
+  }
+}

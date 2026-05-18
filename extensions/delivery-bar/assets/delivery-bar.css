@@ -1,0 +1,144 @@
+/* Delivery Bar — storefront styles */
+
+#fsb-root {
+  width: 100%;
+  background: var(--fsb-bg, #f1f5f9);
+  color: var(--fsb-txt, #1e293b);
+  padding: 10px 16px 6px;
+  box-sizing: border-box;
+  font-family: inherit;
+  z-index: 9999;
+}
+
+#fsb-root[data-position="top"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#fsb-root[data-position="bottom"] {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Offset body so fixed bar doesn't cover content */
+body:has(#fsb-root[data-position="top"]) {
+  padding-top: 68px;
+}
+
+body:has(#fsb-root[data-position="bottom"]) {
+  padding-bottom: 68px;
+}
+
+.fsb-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fsb-msg {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+/* Road track */
+.fsb-road {
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.fsb-road-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(0,0,0,0.10);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* Animated fill on the road */
+.fsb-road-line::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: var(--fsb-pct, 0%);
+  background: var(--fsb-bar, #22c55e);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* Truck icon */
+.fsb-truck {
+  position: absolute;
+  left: 0%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 28px;
+  color: var(--fsb-bar, #22c55e);
+  transition: left 0.5s ease;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.18));
+  z-index: 2;
+}
+
+.fsb-truck svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* House icon */
+.fsb-house {
+  position: absolute;
+  right: 0;
+  transform: translateX(0);
+  width: 28px;
+  height: 28px;
+  color: var(--fsb-txt, #1e293b);
+  opacity: 0.5;
+  transition: opacity 0.4s ease, color 0.4s ease;
+  z-index: 2;
+}
+
+.fsb-house svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* When threshold is reached — house lights up */
+#fsb-root.fsb--done .fsb-house {
+  color: var(--fsb-bar, #22c55e);
+  opacity: 1;
+}
+
+#fsb-root.fsb--done .fsb-truck {
+  animation: fsb-bounce 0.4s ease;
+}
+
+@keyframes fsb-bounce {
+  0%   { transform: translateX(-50%) translateY(0); }
+  40%  { transform: translateX(-50%) translateY(-5px); }
+  70%  { transform: translateX(-50%) translateY(2px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* Branding */
+.fsb-brand {
+  display: block;
+  font-size: 10px;
+  opacity: 0.4;
+  margin-top: 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.fsb-brand:hover {
+  opacity: 0.7;
+}
