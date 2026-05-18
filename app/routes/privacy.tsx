@@ -3,7 +3,7 @@
 
 export default function PrivacyPage() {
   const appName = "DeliveryBar";
-  const contactEmail = "support@deliverybar.app"; // update before submitting
+  const contactEmail = "idcommit@gmail.com";
 
   return (
     <main
