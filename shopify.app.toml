@@ -3,7 +3,7 @@
 client_id = "1b5039a7cc63607a4d873092237be4c8"
 application_url = "https://free-shipping-bar-production-89c5.up.railway.app"
 embedded = true
-name = "free-shipping-bar"
+name = "Free Shipping Bar"
 
 [access_scopes]
 scopes = "read_products"
